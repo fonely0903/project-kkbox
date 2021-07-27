@@ -10,7 +10,13 @@
     "build": "cross-env NODE_ENV=production webpack --progress --hide-modules"
   },
   "dependencies": {
-    "vue": "^2.5.11"
+    "@fortawesome/fontawesome-svg-core": "^1.2.35",
+    "@fortawesome/free-solid-svg-icons": "^5.15.3",
+    "@fortawesome/vue-fontawesome": "^2.0.2",
+    "plyr": "^3.6.8",
+    "rss-parser": "^3.12.0",
+    "vue": "^2.5.11",
+    "vue-router": "^3.5.2"
   },
   "browserslist": [
     "> 1%",

@@ -1,60 +1,57 @@
 <template>
   <div id="app">
-    <img src="./assets/logo.png">
-    <h1>{{ msg }}</h1>
-    <h2>Essential Links</h2>
-    <ul>
-      <li><a href="https://vuejs.org" target="_blank">Core Docs</a></li>
-      <li><a href="https://forum.vuejs.org" target="_blank">Forum</a></li>
-      <li><a href="https://chat.vuejs.org" target="_blank">Community Chat</a></li>
-      <li><a href="https://twitter.com/vuejs" target="_blank">Twitter</a></li>
-    </ul>
-    <h2>Ecosystem</h2>
-    <ul>
-      <li><a href="http://router.vuejs.org/" target="_blank">vue-router</a></li>
-      <li><a href="http://vuex.vuejs.org/" target="_blank">vuex</a></li>
-      <li><a href="http://vue-loader.vuejs.org/" target="_blank">vue-loader</a></li>
-      <li><a href="https://github.com/vuejs/awesome-vue" target="_blank">awesome-vue</a></li>
-    </ul>
+    <router-view :all-episode-list="allEpisodes" :channel="channel" @on-play-episode="episodePlay"></router-view>
+    <Player v-if="playingEpisode" :playing-episode="playingEpisode" :all-episode-list="allEpisodes" @move-to-next="episodePlay"></Player>
   </div>
 </template>
-
 <script>
-export default {
-  name: 'app',
-  data () {
-    return {
-      msg: 'Welcome to Your Vue.js App'
+  import Player from './components/Player.vue'
+  import Parser from 'rss-parser'
+  export default{
+    data(){
+      return{
+        feedUrl: "https://feeds.soundon.fm/podcasts/954689a5-3096-43a4-a80b-7810b219cef3.xml",
+        allEpisodes: [],
+        currentEpisode: {},
+        playingEpisode: null,
+        channel: {}
+      }  
+    },
+    components:{
+      Player
+    },
+    created(){
+      this.getAllEpisodes();
+    },
+    methods:{
+        getAllEpisodes(){
+            const parser = new Parser();
+            parser.parseURL(this.feedUrl)
+                .then(data => {
+                    this.channel = data;
+                    this.allEpisodes = data.items;
+                })
+                .catch(err => {
+                    console.error(err);
+                })
+        },
+        episodePlay(episode){
+          this.playingEpisode = episode;
+        }
     }
   }
-}
 </script>
-
 <style>
-#app {
-  font-family: 'Avenir', Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
+*{
+  font-family: 'Noto Sans TC',"黑體-繁","微軟正黑體", sans-serif;
 }
-
-h1, h2 {
-  font-weight: normal;
+body{
+  background-color: #e8eaeb;
 }
-
-ul {
-  list-style-type: none;
-  padding: 0;
-}
-
-li {
-  display: inline-block;
-  margin: 0 10px;
-}
-
-a {
-  color: #42b983;
+body a{
+  color: #003166;
+  text-decoration: none;
+  font-weight: bold;
 }
 </style>
+
